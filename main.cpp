@@ -147,7 +147,7 @@ void findSCCs(const vector<vector<double>>& adjMatrix) {
 
 int main() {
     // EXO 1    Get sensor datas, create and print the adjacency matrix
-    string filename = "data_sensors10.txt";
+    string filename = "../data_sensors10.txt";
     vector<Sensor> sensors = filedata(filename);
     if (sensors.empty()) {
         cout << "No sensors found in the file." << endl;
