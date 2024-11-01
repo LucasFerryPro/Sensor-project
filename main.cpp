@@ -349,9 +349,12 @@ int main() {
     cout << "Adjacency Matrix:" << endl;
     printAdjacencyMatrix(adjMatrix);
 
+    cout << endl;
     // Find SCCs in the network
     vector<vector<int>> clusters;
     findSCCs(adjMatrix, clusters);
+
+    cout << endl;
 
     // Create the adjacency list for articulation points
     vector<vector<int>> adjList = createAdjacencyList(sensors);
@@ -382,9 +385,13 @@ int main() {
         cout << endl;
     }
 
+    cout << endl;
+
     // Find and print shortest paths within each SCC cluster
     cout << "Shortest Paths in Each Cluster:" << endl;
     findShortestPathsInClusters(clusters, adjMatrix);
+
+    cout << endl;
 
     // Find minimum adjustments for full connectivity
     findMinimumAdjustmentsForFullConnectivity(clusters, sensors);
