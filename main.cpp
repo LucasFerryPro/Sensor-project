@@ -3,11 +3,11 @@
 #include <stack>
 #include <limits>
 #include <string>
-#include <cmath>     // For mathematical functions
+#include <cmath>
 #include <sstream>
-#include <fstream>   // For file I/O (ifstream, ofstream)
-#include <queue>     // For Dijkstra's algorithm
-#include <algorithm> // For std::reverse
+#include <fstream>
+#include <queue>
+#include <algorithm>
 #include <set>
 
 using namespace std;
@@ -281,8 +281,6 @@ void findShortestPathsInClusters(const vector<vector<int>> &clusters, const vect
         }
     }
 }
-
-#include <set>
 
 // Function to find the minimum number of sensors to modify for full connectivity
 void findMinimumAdjustmentsForFullConnectivity(const vector<vector<int>> &clusters, const vector<Sensor> &sensors) {
