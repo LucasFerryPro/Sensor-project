@@ -284,47 +284,50 @@ void findShortestPathsInClusters(const vector<vector<int>> &clusters, const vect
 
 // Function to find the minimum number of sensors to modify for full connectivity
 void findMinimumAdjustmentsForFullConnectivity(const vector<vector<int>> &clusters, const vector<Sensor> &sensors) {
-    // Track all unique clusters
-    set<int> modifiedSensors; // To keep track of sensors we need to modify
+    set<int> modifiedSensors;
     int n = clusters.size();
 
-    // Determine existing connections between clusters
     vector<vector<bool>> canConnect(n, vector<bool>(n, false));
 
-    // Iterate through each cluster and check connectivity with other clusters
     for (int i = 0; i < n; ++i) {
         for (int j = i + 1; j < n; ++j) {
+            bool connected = false;
             for (int u : clusters[i]) {
                 for (int v : clusters[j]) {
-                    if (euclideanDistance(sensors[u], sensors[v]) <= sensors[u].Tx ||
-                        euclideanDistance(sensors[v], sensors[u]) <= sensors[v].Tx) {
-                        canConnect[i][j] = true;
-                        canConnect[j][i] = true; // Undirected graph
-                        break; // No need to check more pairs in this iteration
+                    double distance = euclideanDistance(sensors[u], sensors[v]);
+                    if (distance <= sensors[u].Tx || distance <= sensors[v].Tx) {
+                        canConnect[i][j] = canConnect[j][i] = true;
+                        connected = true;
+                        break;
                     }
                 }
+                if (connected) break;
             }
         }
     }
 
-    // Identify clusters that are not directly connected
     for (int i = 0; i < n; ++i) {
         for (int j = i + 1; j < n; ++j) {
             if (!canConnect[i][j]) {
-                // For each pair of clusters that are not connected,
-                // determine which sensor to modify in one of the clusters
+                double minDistance = std::numeric_limits<double>::infinity();
+                int sensorToModifyInA = -1;
+                int sensorToModifyInB = -1;
+
                 for (int sensorInClusterA : clusters[i]) {
                     for (int sensorInClusterB : clusters[j]) {
                         double distance = euclideanDistance(sensors[sensorInClusterA], sensors[sensorInClusterB]);
-                        if (distance > sensors[sensorInClusterA].Tx) {
-                            // The sensor in cluster A needs to be modified
-                            modifiedSensors.insert(sensorInClusterA);
-                        }
-                        if (distance > sensors[sensorInClusterB].Tx) {
-                            // The sensor in cluster B needs to be modified
-                            modifiedSensors.insert(sensorInClusterB);
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            sensorToModifyInA = sensorInClusterA;
+                            sensorToModifyInB = sensorInClusterB;
                         }
                     }
+                }
+                if (sensorToModifyInA != -1 && minDistance > sensors[sensorToModifyInA].Tx) {
+                    modifiedSensors.insert(sensorToModifyInA);
+                }
+                if (sensorToModifyInB != -1 && minDistance > sensors[sensorToModifyInB].Tx) {
+                    modifiedSensors.insert(sensorToModifyInB);
                 }
             }
         }
